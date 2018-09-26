@@ -1249,7 +1249,9 @@ Index(CompletionManager *completion, WorkingFiles *wfiles, VFS *vfs,
     return {};
 
   auto PCH = std::make_shared<PCHContainerOperations>();
+  // FIXME unsafe
   llvm::IntrusiveRefCntPtr<vfs::FileSystem> FS = vfs::getRealFileSystem();
+  FS->setCurrentWorkingDirectory(opt_wdir);
   std::shared_ptr<CompilerInvocation> CI = BuildCompilerInvocation(args, FS);
   // e.g. .s
   if (!CI)

@@ -63,14 +63,15 @@ struct CompletionSession
   WorkingFiles *wfiles;
   bool inferred = false;
 
-  // TODO share
-  llvm::IntrusiveRefCntPtr<clang::vfs::FileSystem> FS =
-      clang::vfs::getRealFileSystem();
+  llvm::IntrusiveRefCntPtr<clang::vfs::FileSystem> FS;
   std::shared_ptr<clang::PCHContainerOperations> PCH;
 
   CompletionSession(const Project::Entry &file, WorkingFiles *wfiles,
                     std::shared_ptr<clang::PCHContainerOperations> PCH)
-      : file(file), wfiles(wfiles), PCH(PCH) {}
+      : file(file), wfiles(wfiles), PCH(PCH) {
+    FS = clang::vfs::getRealFileSystem();
+    FS->setCurrentWorkingDirectory(file.directory);
+  }
 
   std::shared_ptr<PreambleData> GetPreamble();
   void BuildPreamble(clang::CompilerInvocation &CI, const std::string &main);

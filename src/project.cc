@@ -106,8 +106,6 @@ struct ProjectProcessor {
       }
       hash_combine(hash, std::hash<std::string>{}(arg));
     }
-    args.push_back(Intern("-working-directory=" + entry.directory));
-
     if (!command_set.insert(hash).second) {
       entry.args = std::move(args);
       return;
